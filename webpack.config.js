@@ -1,5 +1,5 @@
-// const CopyWebpackPlugin = require('copy-webpack-plugin');
-// const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
@@ -32,11 +32,11 @@ module.exports = {
         contentBase: './dist',
         overlay: true,
         hot: true
-    }
-    // plugins: [
-    //     new CopyWebpackPlugin({
-    //        patterns: ['index.html']
-    //    }),
-    //    new webpack.HotModuleReplacementPlugin()
-    // ]
+    },
+    plugins: [
+        new CopyWebpackPlugin({
+            patterns: ['index.html']
+        }),
+        new webpack.HotModuleReplacementPlugin()
+    ]
 };
