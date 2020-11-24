@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Amplify JavaScript Example",
   "dependencies": {
+    "@google-cloud/speech": "^4.1.4",
     "@pixiv/three-vrm": "^0.5.2",
     "aws-amplify": "latest",
     "three": "^0.122.0"

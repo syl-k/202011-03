@@ -11,12 +11,77 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
             integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
             crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 </head>
 <body>
 <div id="canvas"></div>
+
+<script>
+    // input voice
+    SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    var startButton = function () {
+        console.log("start");
+        recognition.onresult = (event) => {
+            $('#transcript').val("きみ : " + event.results[0][0].transcript + "\n");
+        }
+
+        recognition.start();
+    }
+    var stopButton = function () {
+        console.log("stop");
+        recognition.stop();
+    }
+    var resetButton = function () {
+        $('#transcript').val('');
+    }
+</script>
+
+<script>
+    // Check for browser support
+    if (!"speechSynthesis" in window) {
+        console.log("Sorry. Your browser <strong>does not support</strong> speech synthesis.");
+    } else {
+        console.log("👍Your browser supports speech synthesis.");
+    }
+    // Chrome loads voices asynchronously.
+    window.speechSynthesis.onvoiceschanged = function(e) {
+        console.log(speechSynthesis);
+    };
+
+    const uttr = new SpeechSynthesisUtterance();
+
+    // Set up an event listener for when the 'speak' button is clicked.
+    // Create a new utterance for the specified text and add it to the queue.
+    var speechButton = function () {
+        console.log("s");
+        uttr.text = $("#transcript").val();
+        uttr.rate = parseFloat("1");
+        uttr.voice = speechSynthesis.getVoices().filter(voice => voice.name == "Google 日本語")[0];
+
+        speechSynthesis.speak(uttr);
+        uttr.onend = function() {
+            // hoge
+        };
+    }
+</script>
+
 <div>
-    <textarea></textarea>
-    <input type="button" value="スタート" />
+    <textarea id="transcript" placeholder="Press Start and speak into your mic" rows="5" readonly="readonly"></textarea>
+    <button id="start-button" class="button-xl" title="Start Transcription" onclick="startButton()">
+        <i class="fa fa-microphone"></i> Start
+    </button>
+    <button id="stop-button" class="button-xl" title="Stop Transcription" onclick="stopButton()">
+        <i class="fa fa-stop-circle"></i> Stop
+    </button>
+    <button id="reset-button" class="button-xl button-secondary" title="Clear Transcript" onclick="resetButton()">
+        Clear Transcript
+    </button>
+
+    <button id="speak-button" class="button-xl button-secondary" title="Speech Transcript" onclick="speechButton()">
+        Speech
+    </button>
 </div>
 </body>
 </html>
