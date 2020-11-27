@@ -44,13 +44,14 @@
             let response_talk = $('#response_talk').val();
 
             let result = ""
-            if (walk_key === null || response_talk === null) {
+            if (walk_key === '' || response_talk === '') {
                 result = resultAction(talk)
             } else {
                 if (talk === walk_key) {
                     result = response_talk
                 }
             }
+            console.log(result)
 
             speechButton(result);
             let doraemon_talk = $('#doraemon-transcript').val();
@@ -69,6 +70,7 @@
     }
     let nctmyButton = function () {
         speechButton('はじめまして！ぼく、ドラえもん。いっぱいはなしかけてね！');
+        $('#doraemon-transcript').val('はじめまして！ぼく、ドラえもん。いっぱいはなしかけてね！');
     }
     let resultAction = function (talk) {
         let result = "";
@@ -78,16 +80,22 @@
             result = janken();
         } else if (talk === "右向いて") {
             result = "右見たよ"
-            window.globalThis.moveButton(0, -5, 0)
+            window.globalThis.moveAction(0, -5, 0)
         } else if (talk === "左向いて") {
             result = "左見たよ"
-            window.globalThis.moveButton(0, 5, 0)
+            window.globalThis.moveAction(0, 5, 0)
         } else if (talk === "前向いて") {
             result = "前向いたよ"
-            window.globalThis.moveButton(0, 0, 0)
+            window.globalThis.moveAction(0, 0, 0)
         } else if (talk === "後ろ向いて") {
             result = "後ろ向いたよ"
-            window.globalThis.moveButton(0, 3, 0)
+            window.globalThis.moveAction(0, 3, 0)
+        } else if (talk === "ビックライト") {
+            result = "ビックライト！"
+            window.globalThis.resizeAction(5, 5, 5)
+        } else if (talk === "スモールライト") {
+            result = "スモールライト！"
+            window.globalThis.resizeAction(0.5, 0.5, 0.5)
         } else {
             result = "もう一度話してみてね"
         }
@@ -99,16 +107,20 @@
     // Set up an event listener for when the 'speak' button is clicked.
     // Create a new utterance for the specified text and add it to the queue.
     let speechButton = function (read_text) {
-        console.log("speech.");
+        console.log("speech.")
 
         uttr.text = read_text;
         uttr.rate = parseFloat("1");
         uttr.voice = speechSynthesis.getVoices().filter(voice => voice.name == "Google 日本語")[0];
 
         speechSynthesis.speak(uttr);
-        uttr.onend = function() {
-            // hoge
+        uttr.onend = function(e) {
+            console.log(e);
         };
+        uttr.onerror = function(event) {
+            console.log(event);
+            console.log('An error has occurred with the speech synthesis: ' + event.error);
+        }
     }
 
     let janken = function () {
