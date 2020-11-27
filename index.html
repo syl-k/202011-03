@@ -38,8 +38,14 @@
         recognition.onresult = (event) => {
             let talk = event.results[0][0].transcript;
             $('#transcript').val(talk + "\n");
+
             if (talk === "こんにちは") {
                 speechButton('ぼく、ドラえもん');
+                $('#doraemon-transcript').val('ぼく、ドラえもん' + "\n");
+            } else if (talk === "じゃんけん") {
+                let re = janken();
+                speechButton(re);
+                $('#doraemon-transcript').val(re + "\n");
             }
         }
 
@@ -71,6 +77,11 @@
         uttr.onend = function() {
             // hoge
         };
+    }
+
+    let janken = function () {
+        let janken_data = ["ぐー", "ちょき", "ぱー"];
+        return janken_data[Math.floor(Math.random() * janken_data.length)];
     }
 </script>
 
