@@ -13,7 +13,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // レンダラーの生成
     const renderer = new THREE.WebGLRenderer()
-    renderer.setSize(window.innerWidth - 300, window.innerHeight - 180);
+    renderer.setSize(document.getElementById('canvas').clientWidth - 20,
+        document.getElementById('canvas').clientHeight - 35);
+    // renderer.setSize(window.innerWidth - 300, window.innerHeight - 180);
     renderer.setPixelRatio(window.devicePixelRatio);
     canvas.appendChild(renderer.domElement)
 
@@ -46,12 +48,13 @@ window.addEventListener("DOMContentLoaded", () => {
         28.0, window.innerWidth / window.innerHeight, 0.1, 2000.0)
     camera.position.set( 0.0, 5.5, 38.0 );
 
-    var loader = new MMDLoader();
+    let loader = new MMDLoader();
     loader.crossOrigin = 'anonymous';
     //コールバックに画面に描画するための諸々のプログラムを書く
     loader.load(
         './doraemon.pmx',
         function ( mesh ) {
+
             mesh.scale.set(1, 1, 1)
             mesh.rotation.set(0, 0, 0);
             mesh.position.set(0, -5, 0);

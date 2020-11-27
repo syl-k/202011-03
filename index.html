@@ -13,32 +13,9 @@
             integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
 </head>
 <body>
-<div id="canvas"></div>
-
-<script>
-    // input voice
-    SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
-    const recognition = new SpeechRecognition();
-
-    var startButton = function () {
-        console.log("start");
-        recognition.onresult = (event) => {
-            $('#transcript').val("きみ : " + event.results[0][0].transcript + "\n");
-        }
-
-        recognition.start();
-    }
-    var stopButton = function () {
-        console.log("stop");
-        recognition.stop();
-    }
-    var resetButton = function () {
-        $('#transcript').val('');
-    }
-</script>
-
 <script>
     // Check for browser support
     if (!"speechSynthesis" in window) {
@@ -46,18 +23,44 @@
     } else {
         console.log("👍Your browser supports speech synthesis.");
     }
+
     // Chrome loads voices asynchronously.
     window.speechSynthesis.onvoiceschanged = function(e) {
         console.log(speechSynthesis);
     };
 
+    // input voice
+    SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    let startButton = function () {
+        console.log("start");
+        recognition.onresult = (event) => {
+            $('#transcript').val(event.results[0][0].transcript + "\n");
+            speechButton('テスト');
+        }
+
+        recognition.start();
+    }
+    let stopButton = function () {
+        console.log("stop");
+        recognition.stop();
+    }
+    let resetButton = function () {
+        $('#transcript').val('');
+        $('#doraemon-transcript').val('');
+    }
+
     const uttr = new SpeechSynthesisUtterance();
 
     // Set up an event listener for when the 'speak' button is clicked.
     // Create a new utterance for the specified text and add it to the queue.
-    var speechButton = function () {
-        console.log("s");
-        uttr.text = $("#transcript").val();
+    let speechButton = function (read_text) {
+        console.log("speech.");
+        console.log(read_text);
+        $("#doraemon-transcript").val(read_text);
+
+        uttr.text = read_text;
         uttr.rate = parseFloat("1");
         uttr.voice = speechSynthesis.getVoices().filter(voice => voice.name == "Google 日本語")[0];
 
@@ -68,21 +71,45 @@
     }
 </script>
 
-<div>
-    <textarea id="transcript" placeholder="Press Start and speak into your mic" rows="5" readonly="readonly"></textarea>
-    <button id="start-button" class="button-xl" title="Start Transcription" onclick="startButton()">
-        <i class="fa fa-microphone"></i> おはなしする
-    </button>
-    <button id="stop-button" class="button-xl" title="Stop Transcription" onclick="stopButton()">
-        <i class="fa fa-stop-circle"></i> やめる
-    </button>
-    <button id="reset-button" class="button-xl button-secondary" title="Clear Transcript" onclick="resetButton()">
-        けす
-    </button>
+<style>
+    html, body {height: 100%;}
+    .ui.grid {height: 100%;}
+    #canvas-grid {height: 80%;}
+    #btn-grid {height: 20%;}
+</style>
 
-    <button id="speak-button" class="button-xl button-secondary" title="Speech Transcript" onclick="speechButton()">
-        はなす
-    </button>
+<div class="ui celled padded equal height grid">
+    <div id="canvas-grid" class="row">
+        <div id="canvas" class="twelve wide column"></div>
+        <div class="four wide column">
+            <div class="ui form">
+                <div class="field">
+                    <label>きみ</label>
+                    <textarea id="transcript" rows="15" readonly="readonly"></textarea>
+                </div>
+
+                <div class="field">
+                    <label>ドラえもん</label>
+                    <textarea id="doraemon-transcript" rows="14" readonly="readonly"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="btn-grid" class="row">
+        <button id="start-button" class="button-xl massive ui button" title="Start Transcription" onclick="startButton()">
+            <i class="fa fa-microphone"></i> おはなしする
+        </button>
+        <button id="stop-button" class="button-xl massive ui button" title="Stop Transcription" onclick="stopButton()">
+            <i class="fa fa-stop-circle"></i> やめる
+        </button>
+        <button id="reset-button" class="two button-xl button-secondary massive ui button" title="Clear Transcript" onclick="resetButton()">
+            けす
+        </button>
+<!--        <button id="speak-button" class=" button-xl button-secondary massive ui button" title="Speech Transcript" onclick="speechButton()">-->
+<!--            はなす-->
+<!--        </button>-->
+    </div>
 </div>
+
 </body>
 </html>
