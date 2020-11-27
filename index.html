@@ -19,9 +19,9 @@
 <script>
     // Check for browser support
     if (!"speechSynthesis" in window) {
-        console.log("Sorry. Your browser <strong>does not support</strong> speech synthesis.");
+        console.log("このブラウザでは音声がつけません.");
     } else {
-        console.log("👍Your browser supports speech synthesis.");
+        console.log("👍このブラウザでは音声が可能です.");
     }
 
     // Chrome loads voices asynchronously.
@@ -40,26 +40,19 @@
             let transcript = $('#transcript').val();
             $('#transcript').val(transcript + talk + "\n");
 
-            let result = "";
-            if (talk === "こんにちは") {
-                speechButton('ぼく、ドラえもん');
-                result = "ぼく、ドラえもん"
-            } else if (talk === "じゃんけん") {
-                result = janken();
-                speechButton(re);
-            } else if (talk === "右向いて") {
-                console.log("右向いて");
-                window.globalThis.moveButton(0, -5, 0)
-            } else if (talk === "左向いて") {
-                console.log("左向いて");
-                window.globalThis.moveButton(0, 5, 0)
-            } else if (talk === "前向いて") {
-                console.log("前向いて");
-                window.globalThis.moveButton(0, 0, 0)
-            } else if (talk === "後ろ向いて") {
-                console.log("後ろ向いて");
-                window.globalThis.moveButton(0, 3, 0)
+            let walk_key = $('#walk_key').val();
+            let response_talk = $('#response_talk').val();
+
+            let result = ""
+            if (walk_key === null || response_talk === null) {
+                result = resultAction(talk)
+            } else {
+                if (talk === walk_key) {
+                    result = response_talk
+                }
             }
+
+            speechButton(result);
             let doraemon_talk = $('#doraemon-transcript').val();
             $('#doraemon-transcript').val(doraemon_talk + result + "\n");
         }
@@ -77,6 +70,29 @@
     let nctmyButton = function () {
         speechButton('はじめまして！ぼく、ドラえもん。いっぱいはなしかけてね！');
     }
+    let resultAction = function (talk) {
+        let result = "";
+        if (talk === "こんにちは") {
+            result = "ぼく、ドラえもん"
+        } else if (talk === "じゃんけん") {
+            result = janken();
+        } else if (talk === "右向いて") {
+            result = "右見たよ"
+            window.globalThis.moveButton(0, -5, 0)
+        } else if (talk === "左向いて") {
+            result = "左見たよ"
+            window.globalThis.moveButton(0, 5, 0)
+        } else if (talk === "前向いて") {
+            result = "前向いたよ"
+            window.globalThis.moveButton(0, 0, 0)
+        } else if (talk === "後ろ向いて") {
+            result = "後ろ向いたよ"
+            window.globalThis.moveButton(0, 3, 0)
+        } else {
+            result = "もう一度話してみてね"
+        }
+        return result
+    }
 
     const uttr = new SpeechSynthesisUtterance();
 
@@ -84,8 +100,6 @@
     // Create a new utterance for the specified text and add it to the queue.
     let speechButton = function (read_text) {
         console.log("speech.");
-        console.log(read_text);
-        $("#doraemon-transcript").val(read_text);
 
         uttr.text = read_text;
         uttr.rate = parseFloat("1");
@@ -117,18 +131,30 @@
             <div class="ui form">
                 <div class="field">
                     <label>きみ</label>
-                    <textarea id="transcript" rows="15" readonly="readonly"></textarea>
+                    <textarea id="walk_key" rows="5"></textarea>
                 </div>
 
                 <div class="field">
                     <label>ドラえもん</label>
-                    <textarea id="doraemon-transcript" rows="14" readonly="readonly"></textarea>
+                    <textarea id="response_talk" rows="5"></textarea>
                 </div>
+
+                <div class="field ui inverted segment red">
+                    <label>きみ（結果）</label>
+                    <textarea id="transcript" rows="2" readonly="readonly"></textarea>
+                </div>
+
+                <div class="field ui inverted segment red">
+                    <label>ドラえもん（結果）</label>
+                    <textarea id="doraemon-transcript" rows="2" readonly="readonly"></textarea>
+                </div>
+
             </div>
         </div>
     </div>
     <div id="btn-grid" class="row">
-        <button id="nice-to-meet-button" class="button-xl massive ui button" title="Nivce too meet you" onclick="nctmyButton()">
+        <button id="nice-to-meet-button" class="button-xl massive ui button" title="Nivce too meet you"
+                onclick="nctmyButton()">
             はじめまして！
         </button>
         <button id="start-button" class="button-xl massive ui button" title="Start Transcription" onclick="startButton()">
@@ -137,7 +163,8 @@
         <button id="stop-button" class="button-xl massive ui button" title="Stop Transcription" onclick="stopButton()">
             <i class="fa fa-stop-circle"></i> やめる
         </button>
-        <button id="reset-button" class="two button-xl button-secondary massive ui button" title="Clear Transcript" onclick="resetButton()">
+        <button id="reset-button" class="two button-xl button-secondary massive ui button" title="Clear Transcript"
+                onclick="resetButton()">
             けす
         </button>
     </div>
