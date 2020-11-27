@@ -37,16 +37,31 @@
         console.log("start");
         recognition.onresult = (event) => {
             let talk = event.results[0][0].transcript;
-            $('#transcript').val(talk + "\n");
+            let transcript = $('#transcript').val();
+            $('#transcript').val(transcript + talk + "\n");
 
+            let result = "";
             if (talk === "こんにちは") {
                 speechButton('ぼく、ドラえもん');
-                $('#doraemon-transcript').val('ぼく、ドラえもん' + "\n");
+                result = "ぼく、ドラえもん"
             } else if (talk === "じゃんけん") {
-                let re = janken();
+                result = janken();
                 speechButton(re);
-                $('#doraemon-transcript').val(re + "\n");
+            } else if (talk === "右向いて") {
+                console.log("右向いて");
+                window.globalThis.moveButton(0, -5, 0)
+            } else if (talk === "左向いて") {
+                console.log("左向いて");
+                window.globalThis.moveButton(0, 5, 0)
+            } else if (talk === "前向いて") {
+                console.log("前向いて");
+                window.globalThis.moveButton(0, 0, 0)
+            } else if (talk === "後ろ向いて") {
+                console.log("後ろ向いて");
+                window.globalThis.moveButton(0, 3, 0)
             }
+            let doraemon_talk = $('#doraemon-transcript').val();
+            $('#doraemon-transcript').val(doraemon_talk + result + "\n");
         }
 
         recognition.start();
@@ -58,6 +73,9 @@
     let resetButton = function () {
         $('#transcript').val('');
         $('#doraemon-transcript').val('');
+    }
+    let nctmyButton = function () {
+        speechButton('はじめまして！ぼく、ドラえもん。いっぱいはなしかけてね！');
     }
 
     const uttr = new SpeechSynthesisUtterance();
@@ -110,6 +128,9 @@
         </div>
     </div>
     <div id="btn-grid" class="row">
+        <button id="nice-to-meet-button" class="button-xl massive ui button" title="Nivce too meet you" onclick="nctmyButton()">
+            はじめまして！
+        </button>
         <button id="start-button" class="button-xl massive ui button" title="Start Transcription" onclick="startButton()">
             <i class="fa fa-microphone"></i> おはなしする
         </button>
@@ -119,11 +140,7 @@
         <button id="reset-button" class="two button-xl button-secondary massive ui button" title="Clear Transcript" onclick="resetButton()">
             けす
         </button>
-<!--        <button id="speak-button" class=" button-xl button-secondary massive ui button" title="Speech Transcript" onclick="speechButton()">-->
-<!--            はなす-->
-<!--        </button>-->
     </div>
 </div>
-
 </body>
 </html>

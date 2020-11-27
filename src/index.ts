@@ -4,6 +4,8 @@ import { VRM } from '@pixiv/three-vrm'
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {MMDLoader} from "three/examples/jsm/loaders/MMDLoader";
 
+let obj;
+
 window.addEventListener("DOMContentLoaded", () => {
     // canvasの取得
     const canvas = document.getElementById('canvas')
@@ -54,11 +56,11 @@ window.addEventListener("DOMContentLoaded", () => {
     loader.load(
         './doraemon.pmx',
         function ( mesh ) {
-
-            mesh.scale.set(1, 1, 1)
-            mesh.rotation.set(0, 0, 0);
-            mesh.position.set(0, -5, 0);
-            scene.add( mesh );
+            obj = mesh
+            obj.scale.set(1, 1, 1)
+            obj.rotation.set(0, 0, 0);
+            obj.position.set(0, -5, 0);
+            scene.add(obj);
         },
         // called when loading is in progresses
         function ( xhr ) {
@@ -90,3 +92,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     update()
 })
+
+window.globalThis.moveButton = function(x, y ,z) {
+    obj.rotation.set(x, y, z)
+}
