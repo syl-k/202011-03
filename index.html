@@ -36,8 +36,11 @@
     let startButton = function () {
         console.log("start");
         recognition.onresult = (event) => {
-            $('#transcript').val(event.results[0][0].transcript + "\n");
-            speechButton('テスト');
+            let talk = event.results[0][0].transcript;
+            $('#transcript').val(talk + "\n");
+            if (talk === "こんにちは") {
+                speechButton('ぼく、ドラえもん');
+            }
         }
 
         recognition.start();
