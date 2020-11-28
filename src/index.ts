@@ -103,6 +103,10 @@ window.globalThis.resizeAction = function(x, y ,z) {
     obj.scale.set(x, y, z)
 }
 
+window.globalThis.s = function(x, y ,z) {
+    obj.rotation.set(2, 0, 0);
+}
+
 window.globalThis.dokodemodoor = function () {
     // 画像を読み込む
     var texture = new THREE.TextureLoader().load('./s.jpg',
