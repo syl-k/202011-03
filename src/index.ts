@@ -6,13 +6,14 @@ import {MMDLoader} from "three/examples/jsm/loaders/MMDLoader";
 
 let obj;
 let camera;
+let scene;
 
 window.addEventListener("DOMContentLoaded", () => {
     // canvasの取得
     const canvas = document.getElementById('canvas')
 
     // シーンの生成
-    const scene = new THREE.Scene()
+    scene = new THREE.Scene()
 
     // レンダラーの生成
     const renderer = new THREE.WebGLRenderer()
@@ -86,6 +87,9 @@ window.addEventListener("DOMContentLoaded", () => {
     const axesHelper = new THREE.AxesHelper( 5 );
     scene.add( axesHelper );
 
+
+    globalThis.dokodemodoor();
+
     // フレーム毎に呼ばれる
     const update = () => {
         requestAnimationFrame(update)
@@ -100,4 +104,21 @@ window.globalThis.moveAction = function(x, y ,z) {
 
 window.globalThis.resizeAction = function(x, y ,z) {
     obj.scale.set(x, y, z)
+}
+
+window.globalThis.dokodemodoor = function () {
+    // 画像を読み込む
+    var texture = new THREE.TextureLoader().load('./s.jpg',
+        (tex) => { // 読み込み完了時
+            // 縦横比を保って適当にリサイズ
+            const w = 4;
+            const h = tex.image.height/(tex.image.width/w);
+
+            // 平面
+            const geometry = new THREE.PlaneGeometry(20,20);
+            const material = new THREE.MeshPhongMaterial( { map:texture } );
+            const plane = new THREE.Mesh( geometry, material );
+            plane.scale.set(w, h, 1);
+            scene.add( plane );
+        });
 }
