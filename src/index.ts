@@ -87,9 +87,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const axesHelper = new THREE.AxesHelper( 5 );
     scene.add( axesHelper );
 
-
-    globalThis.dokodemodoor();
-
     // フレーム毎に呼ばれる
     const update = () => {
         requestAnimationFrame(update)
